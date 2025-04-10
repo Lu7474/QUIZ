@@ -7,7 +7,8 @@ app = Flask(__name__)
 quizes = """
     CREATE TABLE IF NOT EXISTS quizes (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
-        name VARCHAR(100) NOT NULL
+        name VARCHAR(100) NOT NULL,
+        description VARCHAR(100) NOT NULL
     );
 """
 questions = """
@@ -37,3 +38,49 @@ with get_db_connection() as connection:
     cursor.execute(quizes)
     cursor.execute(questions)
     cursor.execute(answers)
+
+
+def get_quiz(search=None):
+    with get_db_connection() as connection:
+        connection.row_factory = sqlite3.Row
+        cursor = connection.cursor()
+        if search:
+            cursor.execute(
+                """
+                SELECT quizes.id, name, description FROM quizes WHERE name LIKE ?;
+                """,
+                (f"%{search}%",),
+            )
+        else:
+            cursor.execute(
+                """
+                SELECT quizes.id, name, description FROM quizes;
+                """
+            )
+        quizes = cursor.fetchall()
+        return [dict(row) for row in quizes]
+
+
+def del_quiz(quiz_id):
+    with get_db_connection() as connection:
+        cursor = connection.cursor()
+        cursor.execute(
+            """
+            DELETE FROM quizes WHERE id = ?;
+            """,
+            (quiz_id,),
+        )
+        connection.commit()
+
+
+def save_quiz(name, description):
+    with get_db_connection() as connection:
+        cursor = connection.cursor()
+        cursor.execute(
+            """
+            INSERT INTO quizes (name, description)
+            VALUES (?, ?);
+            """,
+            (name, description),
+        )
+        connection.commit()

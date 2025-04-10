@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% block main %}
+  <br />
+  <form method="post" enctype="multipart/form-data">
+    <div class="input-group mb-3">
+      <input type="text" class="form-control" placeholder="Заголовок" name="name" required />
+    </div>
+    <div class="input-group mb-3">
+      <textarea class="form-control" placeholder="Описание" name="description" required></textarea>
+    </div>
+    <button class="btn btn-primary">Добавить квиз</button>
+  </form>
+{% endblock %}
