@@ -6,6 +6,7 @@
       <div class="card-body">
         <h5 class="card-title">{{ quiz.name }}</h5>
         <p class="card-text">{{ quiz.description }}</p>
+        <a href="{{ url_for('perform_quiz', quiz_id=quiz.id) }}" class="btn btn-primary">Пройти</a>
         <form method="POST" action="{{ url_for('delete_quiz', id=quiz.id) }}" class="d-inline"
             onsubmit="return confirm('Вы уверены, что хотите удалить этот квиз?')">
             <button type="submit" class="btn btn-primary">Удалить</button>

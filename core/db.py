@@ -84,3 +84,42 @@ def save_quiz(name, description):
             (name, description),
         )
         connection.commit()
+
+
+def get_questions(quiz_id):
+    with get_db_connection() as connection:
+        connection.row_factory = sqlite3.Row
+        cursor = connection.cursor()
+        cursor.execute(
+            """
+            SELECT 
+                questions.id AS question_id, 
+                questions.text AS question_text, 
+                answers.id AS answer_id, 
+                answers.text AS answer_text, 
+                answers.is_correct 
+            FROM questions
+            LEFT JOIN answers ON questions.id = answers.question_id
+            WHERE questions.quiz_id = ?;
+            """,
+            (quiz_id,),
+        )
+        rows = cursor.fetchall()
+
+        # Группируем ответы по вопросам
+        questions = {}
+        for row in rows:
+            question_id = row["question_id"]
+            if question_id not in questions:
+                questions[question_id] = {
+                    "id": question_id,
+                    "text": row["question_text"],
+                    "answers": [],
+                }
+            questions[question_id]["answers"].append({
+                "id": row["answer_id"],
+                "text": row["answer_text"],
+                "is_correct": row["is_correct"],
+            })
+
+        return list(questions.values())
