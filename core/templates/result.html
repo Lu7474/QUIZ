@@ -1,0 +1,7 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1>Результаты</h1>
+<p>Правильных ответов: {{ correct_count }}</p>
+<p>Всего вопросов: {{ total }}</p>
+<a href="{{ url_for('home') }}">Вернуться на главную</a>
+{% endblock %}

@@ -1,6 +1,6 @@
 from flask import Flask, request, redirect, url_for, render_template
 
-from .db import app, del_quiz, save_quiz, get_quiz, get_questions
+from .db import app, del_quiz, save_quiz, get_quiz, get_questions, save_ques
 
 
 @app.route("/")
@@ -26,14 +26,19 @@ def delete_quiz(id):
     return redirect(url_for("index"))
 
 
-@app.route("/quiz", methods=["GET"])
+@app.route("/quiz/<int:quiz_id>", methods=["GET"])
 def perform_quiz(quiz_id):
     questions = get_questions(quiz_id)
     return render_template("quiz.html", questions=questions)
 
 
-# @app.route("/perform_quiz")
-# def perform_quiz():
-#     quiz_id = request.args.get("id")  # Получение ID викторины из строки запроса
-#     # Логика для обработки викторины
-#     return render_template("quiz.html", quiz_id=quiz_id)
+@app.route("/create_ques", methods=["POST", "GET"])
+def create_ques():
+    if request.method == "POST":
+
+        save_ques()
+        return redirect(url_for("index"))
+    return render_template("add_question.html")
+
+
+# @app.route("/submit/<quiz_id>) - обработка результатов

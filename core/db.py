@@ -86,6 +86,19 @@ def save_quiz(name, description):
         connection.commit()
 
 
+def save_ques(text):
+    with get_db_connection() as connection:
+        cursor = connection.cursor()
+        cursor.execute(
+            """
+            INSERT INTO questions (text)
+            VALUES (?);
+            """,
+            (text),
+        )
+        connection.commit()
+
+
 def get_questions(quiz_id):
     with get_db_connection() as connection:
         connection.row_factory = sqlite3.Row
@@ -106,7 +119,6 @@ def get_questions(quiz_id):
         )
         rows = cursor.fetchall()
 
-        # Группируем ответы по вопросам
         questions = {}
         for row in rows:
             question_id = row["question_id"]

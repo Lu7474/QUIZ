@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Добавить вопрос</h1>
+<form method="POST">
+    <label for="question_text">Текст вопроса:</label>
+    <input type="text" name="question_text" required>
+
+    <h3>Варианты ответов:</h3>
+    {% for i in 0|make_list:4 %}
+    <label for="answer_{{ i }}">Ответ {{ i + 1 }}:</label>
+    <input type="text" name="answers[]" required>
+    <label>
+        <input type="checkbox" name="correct_answers[]" value="{{ i }}"> Правильный ответ
+    </label>
+    {% endfor %}
+    <button type="submit">Добавить</button>
+    {% endblock %}
